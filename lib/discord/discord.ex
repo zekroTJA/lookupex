@@ -1,6 +1,8 @@
 defmodule Lookupex.Discord do
   use GenServer
 
+  import Lookupex.Discord.Util
+
   @name __MODULE__
 
   def start_link(_args) do
@@ -38,7 +40,12 @@ defmodule Lookupex.Discord do
     {data, status} =
       if data == nil do
         {:ok, response} = Tesla.get(state[:client], "/users/" <> id)
-        body = response.body |> Map.put("date", DateTime.utc_now())
+
+        body =
+          response.body
+          |> Map.put("date", DateTime.utc_now())
+          |> Map.put("avatar_url", get_avatar_url(response.body))
+
         Lookupex.Cache.put_user(id, body)
         {body, response.status}
       else
