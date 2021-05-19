@@ -3,6 +3,7 @@ defmodule Lookupex.Cache do
 
   @name __MODULE__
 
+  @user_data_lifetime 600
   @namespace_user_data "USER:DATA"
   @namespace_user_stats_accesses "USER:STATS:ACCESSES"
 
@@ -23,7 +24,7 @@ defmodule Lookupex.Cache do
   ### API ###
 
   def put_user(user_id, data, pid \\ @name) do
-    GenServer.cast(pid, {:set, "#{@namespace_user_data}:#{user_id}", data, 10})
+    GenServer.cast(pid, {:set, "#{@namespace_user_data}:#{user_id}", data, @user_data_lifetime})
   end
 
   def request_user(user_id, pid \\ @name) do
