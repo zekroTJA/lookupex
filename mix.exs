@@ -23,6 +23,7 @@ defmodule Lookupex.MixProject do
   defp deps do
     [
       {:plug_cowboy, "~> 2.0"},
+      {:cors_plug, "~> 2.0"},
       {:jason, "~> 1.2"},
       {:tesla, "~> 1.4.0"},
       {:envy, "~> 1.1.1"},

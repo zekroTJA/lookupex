@@ -11,6 +11,8 @@ defmodule Lookupex.Webserver.Router do
     json_decoder: Jason
   )
 
+  plug(CORSPlug)
+
   plug(:match)
   plug(:dispatch)
 

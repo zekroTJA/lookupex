@@ -27,3 +27,5 @@ lookupex-*.tar
 /tmp
 
 *.env
+
+.vscode
