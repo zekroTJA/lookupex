@@ -42,17 +42,20 @@ defmodule Lookupex.Discord do
         {:ok, response} = Tesla.get(state[:client], "/users/" <> id)
 
         body =
-          response.body
-          |> Map.put("date", DateTime.utc_now())
-          |> Map.put("avatar_url", get_avatar_url(response.body))
+          if response.status < 400 do
+            response.body
+            |> Map.put("date", DateTime.utc_now())
+            |> Map.put("avatar_url", get_avatar_url(response.body))
+            |> Map.put("request_count", request_count)
+          else
+            response.body
+          end
 
         Lookupex.Cache.put_user(id, body)
         {body, response.status}
       else
         {data, 200}
       end
-
-    data = data |> Map.put("request_count", request_count)
 
     {:reply, {data, status}, state}
   end
