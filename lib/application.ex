@@ -25,7 +25,9 @@ defmodule Lookupex.Application do
           ip: {Enum.at(ip, 0), Enum.at(ip, 1), Enum.at(ip, 2), Enum.at(ip, 3)},
           port: port
         ]
-      }
+      },
+      Lookupex.Discord,
+      Lookupex.Cache
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
@@ -33,7 +35,7 @@ defmodule Lookupex.Application do
     opts = [strategy: :one_for_one, name: Lookupex.Supervisor]
     Supervisor.start_link(children, opts)
 
-    Lookupex.Discord.start_link()
-    Lookupex.Cache.start_link()
+    # Lookupex.Discord.start_link()
+    # Lookupex.Cache.start_link()
   end
 end
