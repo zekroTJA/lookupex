@@ -48,12 +48,27 @@ services:
     labels:
       traefik.enable: "true"
       traefik.http.routers.lookupex-api.entrypoints: "http"
-      # traefik.http.routers.lookupex-api.tls: "true"
-      # traefik.http.routers.lookupex-api.tls.certresolver: "le"
-      # traefik.http.routers.lookupex-api.rule: "Host(`lookup.zekro.de`) && PathPrefix(`/api`)"
-      traefik.http.routers.lookupex-api.rule: "PathPrefix(`/api`)"
+      traefik.http.routers.lookupex-api.tls: "true"
+      traefik.http.routers.lookupex-api.tls.certresolver: "le"
+      traefik.http.routers.lookupex-api.rule: "Host(`lookup.example.com`) && PathPrefix(`/api`)"
       traefik.http.routers.lookupex-api.middlewares: "lookupex-api-rl,lookupex-api-sp"
       traefik.http.middlewares.lookupex-api-rl.ratelimit.average: "10"
       traefik.http.middlewares.lookupex-api-rl.ratelimit.period: "1m"
       traefik.http.middlewares.lookupex-api-rl.ratelimit.burst: "10"
       traefik.http.middlewares.lookupex-api-sp.stripprefix.prefixes: "/api"
+
+  webapp:
+    build:
+      context: "."
+      dockerfile: "./webapp/Dockerfile"
+    image: "webapp:latest"
+    expose:
+      - "80"
+    depends_on:
+      - "redis"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.lookupex-api.entrypoints: "http"
+      traefik.http.routers.lookupex-api.tls: "true"
+      traefik.http.routers.lookupex-api.tls.certresolver: "le"
+      traefik.http.routers.lookupex-api.rule: "Host(`lookup.example.com`)"

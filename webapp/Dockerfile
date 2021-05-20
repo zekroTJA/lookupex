@@ -1,11 +1,13 @@
 FROM node:16 AS build
 WORKDIR /build
+ARG API_ENDPOINT=""
 COPY webapp/public public
 COPY webapp/src src
 COPY webapp/package-lock.json .
 COPY webapp/package.json .
 COPY webapp/rollup.config.js .
 COPY webapp/tsconfig.json .
+ENV API_ENDPOINT=$API_ENDPOINT
 RUN npm install
 RUN npm run build
 
