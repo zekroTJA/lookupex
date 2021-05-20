@@ -42,7 +42,6 @@ defmodule Lookupex.Discord do
       {:reply, {%{code: 400, message: "invalid snowflake id"}, 400}, state}
     else
       {request_count, data, status} = Lookupex.Cache.request_user(id)
-      IO.inspect(request_count)
 
       {data, status} =
         if data == nil do

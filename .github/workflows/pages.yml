@@ -1,0 +1,42 @@
+name: Deploy Pages
+
+on:
+  push:
+    branches:
+     - 'master'
+
+jobs:
+
+  deploy:
+    name: 'Deploy to Pages'
+    runs-on: 'ubuntu-latest'
+
+    steps:
+
+    - name: 'Setup Node'
+      uses: actions/setup-node@v1
+      with:
+        node-version: '15.x'
+
+    - name: 'Checkout Code'
+      uses: actions/checkout@v2
+
+    - name: Login to GPR
+      uses: jgierer12/npm-auth-gpr@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 'Install Dependencies'
+      working-directory: './webapp'
+      run: npm install
+
+    - name: 'Build Static Content'
+      working-directory: './webapp'
+      run: npm run build
+
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./webapp/public
+        cname: lookup.zekro.de

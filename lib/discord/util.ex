@@ -67,7 +67,6 @@ defmodule Lookupex.Discord.Util do
   end
 
   defp default_avatar(discriminator) do
-    discriminator |> IO.inspect()
     disc = String.to_integer(discriminator)
     "#{@endpoint_cdn}/embed/avatars/#{rem(disc, 5)}.png"
   end
