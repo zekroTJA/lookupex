@@ -1,5 +1,6 @@
 defmodule Lookupex.Discord do
   use GenServer
+  require Logger
 
   import Lookupex.Discord.Util
 
@@ -35,6 +36,8 @@ defmodule Lookupex.Discord do
   ### CALLBACKS ###
 
   def handle_call({:lookup, id}, _from, state) do
+    Logger.info("lookup", id: id)
+
     if not check_id(id) do
       {:reply, {%{code: 400, message: "invalid snowflake id"}, 400}, state}
     else

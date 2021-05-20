@@ -1,7 +1,7 @@
 defmodule Lookupex.Webserver.Router do
   use Plug.Router
   use Plug.ErrorHandler
-
+  require Logger
   import Lookupex.Webserver.Util
 
   plug(
@@ -11,7 +11,14 @@ defmodule Lookupex.Webserver.Router do
     json_decoder: Jason
   )
 
-  plug(CORSPlug)
+  # This is dirty, maybe find a better solution
+  # for that later :)
+  Envy.auto_load()
+
+  if System.get_env("DEBUG", "false") |> String.downcase() == "true" do
+    Logger.warn("debug mode engaged")
+    plug(CORSPlug)
+  end
 
   plug(:match)
   plug(:dispatch)
