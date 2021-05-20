@@ -29,6 +29,10 @@ defmodule Lookupex.Webserver.Router do
   end
 
   match _ do
-    conn |> resp_json_not_found()
+    if conn.method == "OPTIONS" do
+      conn |> resp_json_ok()
+    else
+      conn |> resp_json_not_found()
+    end
   end
 end
