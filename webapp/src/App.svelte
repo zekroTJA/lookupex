@@ -5,6 +5,11 @@
   let id = "";
   let fetchPromise: Promise<UserModel>;
 
+  const apiURL =
+    process.env.NODE_ENV === "production"
+      ? "https://api.lookup.zekro.de"
+      : "http://localhost:8080";
+
   function onInput(e: Event) {
     const v = (e.currentTarget as HTMLInputElement).value;
     const match = v.match(/\d+/);
@@ -21,7 +26,7 @@
   }
 
   async function fetchData(): Promise<UserModel> {
-    const res = await window.fetch("http://localhost:8080/lookup/" + id);
+    const res = await window.fetch(apiURL + "/lookup/" + id);
     const body = await res.json();
     if (res.ok) {
       return body;
