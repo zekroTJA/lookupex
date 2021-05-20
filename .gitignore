@@ -29,3 +29,5 @@ lookupex-*.tar
 *.env
 
 .vscode
+
+.DS_Store
