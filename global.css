@@ -29,3 +29,8 @@ h4,
 h5 {
   font-family: "Maven Pro";
 }
+
+a {
+  color: #a66fff;
+  text-decoration: none;
+}
