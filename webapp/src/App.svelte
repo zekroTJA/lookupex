@@ -5,10 +5,9 @@
   let id = "";
   let fetchPromise: Promise<UserModel>;
 
-  const apiURL =
-    process.env.NODE_ENV === "production"
-      ? "https://api.lookup.zekro.de"
-      : "http://localhost:8080";
+  const apiURL = process.env.isProd
+    ? "https://api.lookup.zekro.de"
+    : "http://localhost:8080";
 
   function onInput(e: Event) {
     const v = (e.currentTarget as HTMLInputElement).value;
