@@ -1,8 +1,9 @@
 <script lang="ts">
-  import type { User } from "./models";
+  import User from "./components/User.svelte";
+  import type { User as UserModel } from "./models";
 
   let id = "";
-  let fetchPromise: Promise<User>;
+  let fetchPromise: Promise<UserModel>;
 
   function onInput(e: Event) {
     const v = (e.currentTarget as HTMLInputElement).value;
@@ -19,7 +20,7 @@
     );
   }
 
-  async function fetchData(): Promise<User> {
+  async function fetchData(): Promise<UserModel> {
     const res = await window.fetch("http://localhost:8080/lookup/" + id);
     const body = await res.json();
     if (res.ok) {
@@ -34,26 +35,26 @@
   <div class="container">
     <h1>LOOKUP<span class="heading-clr">EX</span></h1>
     <input autofocus bind:value={id} on:input={(v) => onInput(v)} />
+    <User
+      user={JSON.parse(
+        '{"avatar":"7ea477badfed36169fb7829aed966ba6","avatar_url":"https://cdn.discordapp.com/avatars/524847123875889153/7ea477badfed36169fb7829aed966ba6.png","bot":true,"creation":"2018-12-19T07:15:05.520Z","date":"2021-05-20T10:26:40.230000Z","discriminator":"4878","flags_abstracted":["verified_bot"],"id":"524847123875889153","public_flags":65536,"request_count":2,"username":"shinpuru"}'
+      )}
+    />
     {#if id && fetchPromise}
       {#await fetchPromise}
         <p>Loading ...</p>
       {:then user}
-        <p>{user.username}</p>
+        <User {user} />
       {:catch err}
-        <p>Error: {err?.message ?? "unknown"}</p>
+        <div class="error-container">
+          <span>Error: {err?.message ?? err?.user_id[0] ?? "unknown"}</span>
+        </div>
       {/await}
     {/if}
   </div>
 </main>
 
 <style lang="scss">
-  .container {
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    margin-top: 8vh;
-  }
-
   h1 {
     font-size: 40px;
   }
@@ -74,6 +75,19 @@
     &:focus {
       border-width: 5px;
     }
+  }
+
+  .container {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    margin-top: 8vh;
+  }
+
+  .error-container {
+    background-color: #f44336;
+    padding: 5px 10px;
+    margin-top: 30px;
   }
 
   .heading-clr {
