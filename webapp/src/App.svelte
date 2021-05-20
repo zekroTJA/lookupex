@@ -35,11 +35,6 @@
   <div class="container">
     <h1>LOOKUP<span class="heading-clr">EX</span></h1>
     <input autofocus bind:value={id} on:input={(v) => onInput(v)} />
-    <User
-      user={JSON.parse(
-        '{"avatar":"7ea477badfed36169fb7829aed966ba6","avatar_url":"https://cdn.discordapp.com/avatars/524847123875889153/7ea477badfed36169fb7829aed966ba6.png","bot":true,"creation":"2018-12-19T07:15:05.520Z","date":"2021-05-20T10:26:40.230000Z","discriminator":"4878","flags_abstracted":["verified_bot"],"id":"524847123875889153","public_flags":65536,"request_count":2,"username":"shinpuru"}'
-      )}
-    />
     {#if id && fetchPromise}
       {#await fetchPromise}
         <p>Loading ...</p>
