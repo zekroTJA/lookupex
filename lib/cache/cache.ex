@@ -4,8 +4,8 @@ defmodule Lookupex.Cache do
   @name __MODULE__
 
   @user_data_lifetime 600
-  @namespace_user_data "USER:DATA"
-  @namespace_user_stats_accesses "USER:STATS:ACCESSES"
+  @namespace_user_data "LUX:USER:DATA"
+  @namespace_user_stats_accesses "LUX:USER:STATS:ACCESSES"
 
   def start_link(_args) do
     GenServer.start_link(__MODULE__, :ok, name: @name)

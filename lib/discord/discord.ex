@@ -55,6 +55,7 @@ defmodule Lookupex.Discord do
               |> Map.put("avatar_url", get_avatar_url(response.body))
               |> Map.put("creation", get_id_creation(response.body["id"]))
               |> Map.put("request_count", request_count)
+              |> Map.put("flags_abstracted", abstract_flags(response.body["public_flags"]))
             else
               response.body
             end
