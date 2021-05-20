@@ -7,7 +7,7 @@
   let fetchPromise: Promise<UserModel>;
 
   const apiURL = process.env.isProd
-    ? "https://lookup.api.zekro.de"
+    ? process.env.liveEndpoint
     : "http://localhost:8080";
 
   function onInput(e: Event) {

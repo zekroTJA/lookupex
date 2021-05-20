@@ -74,6 +74,8 @@ export default {
       process: JSON.stringify({
         env: {
           isProd: production,
+          liveEndpoint:
+            process.env.API_ENDPOINT ?? "https://lookup.api.zekro.de",
         },
       }),
     }),
