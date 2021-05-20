@@ -42,6 +42,7 @@ defmodule Lookupex.Discord do
       {:reply, {%{code: 400, message: "invalid snowflake id"}, 400}, state}
     else
       {request_count, data, status} = Lookupex.Cache.request_user(id)
+      IO.inspect(request_count)
 
       {data, status} =
         if data == nil do
@@ -54,7 +55,6 @@ defmodule Lookupex.Discord do
               response.body
               |> Map.put("avatar_url", get_avatar_url(response.body))
               |> Map.put("creation", get_id_creation(response.body["id"]))
-              |> Map.put("request_count", request_count)
               |> Map.put("flags_abstracted", abstract_flags(response.body["public_flags"]))
             else
               response.body
@@ -67,6 +67,7 @@ defmodule Lookupex.Discord do
           {data, status}
         end
 
+      data = if status < 400, do: data |> Map.put("request_count", request_count), else: data
       data = data |> Map.put("date", DateTime.utc_now())
 
       {:reply, {data, status}, state}
