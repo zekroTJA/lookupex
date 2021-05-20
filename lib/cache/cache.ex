@@ -23,7 +23,8 @@ defmodule Lookupex.Cache do
 
   ### API ###
 
-  def put_user(user_id, data, pid \\ @name) do
+  def put_user(user_id, data, status \\ 200, pid \\ @name) do
+    data = data |> Map.put("_status", status)
     GenServer.cast(pid, {:set, "#{@namespace_user_data}:#{user_id}", data, @user_data_lifetime})
   end
 
@@ -31,7 +32,10 @@ defmodule Lookupex.Cache do
     request_count = GenServer.call(pid, {:incr, "#{@namespace_user_stats_accesses}:#{user_id}"})
     data = GenServer.call(pid, {:get, "#{@namespace_user_data}:#{user_id}"})
 
-    {request_count, data}
+    status = if data != nil, do: data["_status"], else: 404
+    data = if data != nil, do: data |> Map.delete("_status"), else: data
+
+    {request_count, data, status}
   end
 
   ### CALLBACKS ###

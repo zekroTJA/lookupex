@@ -31,6 +31,24 @@ defmodule Lookupex.Discord.Util do
     |> DateTime.from_unix!(:millisecond)
   end
 
+  def check_id(id) when is_binary(id) do
+    case id |> Integer.parse() do
+      :error ->
+        false
+
+      {v, b} ->
+        if String.length(b) > 0 do
+          false
+        else
+          check_id(v)
+        end
+    end
+  end
+
+  def check_id(id) when is_integer(id) do
+    id > 1_420_070_400_000
+  end
+
   defp default_avatar(discriminator) do
     discriminator |> IO.inspect()
     disc = String.to_integer(discriminator)

@@ -35,32 +35,37 @@ defmodule Lookupex.Discord do
   ### CALLBACKS ###
 
   def handle_call({:lookup, id}, _from, state) do
-    {request_count, data} = Lookupex.Cache.request_user(id)
+    if not check_id(id) do
+      {:reply, {%{code: 400, message: "invalid snowflake id"}, 400}, state}
+    else
+      {request_count, data, status} = Lookupex.Cache.request_user(id)
 
-    {data, status} =
-      if data == nil do
-        {:ok, response} = Tesla.get(state[:client], "/users/" <> id)
+      {data, status} =
+        if data == nil do
+          {:ok, response} = Tesla.get(state[:client], "/users/" <> id)
 
-        ok = response.status < 400
+          ok = response.status < 400
 
-        body =
-          if ok do
-            response.body
-            |> Map.put("date", DateTime.utc_now())
-            |> Map.put("avatar_url", get_avatar_url(response.body))
-            |> Map.put("creation", get_id_creation(response.body["id"]))
-            |> Map.put("request_count", request_count)
-          else
-            response.body
-          end
+          body =
+            if ok do
+              response.body
+              |> Map.put("avatar_url", get_avatar_url(response.body))
+              |> Map.put("creation", get_id_creation(response.body["id"]))
+              |> Map.put("request_count", request_count)
+            else
+              response.body
+            end
 
-        if ok, do: Lookupex.Cache.put_user(id, body)
+          Lookupex.Cache.put_user(id, body, response.status)
 
-        {body, response.status}
-      else
-        {data, 200}
-      end
+          {body, response.status}
+        else
+          {data, status}
+        end
 
-    {:reply, {data, status}, state}
+      data = data |> Map.put("date", DateTime.utc_now())
+
+      {:reply, {data, status}, state}
+    end
   end
 end
