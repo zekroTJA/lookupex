@@ -61,6 +61,8 @@ services:
     build:
       context: "."
       dockerfile: "./webapp/Dockerfile"
+      args:
+        - "API_ENDPOINT=https://lookup.example.com/api"
     image: "webapp:latest"
     expose:
       - "80"

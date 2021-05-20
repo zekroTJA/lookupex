@@ -2,6 +2,23 @@
 
 The nEXt generation Discord profile lookup service!
 
+## Setup
+
+If you really want to set this stuff up yourself for some reason, you shpuld do it with Docker and docker-compose.  
+You can also do it without, have fun. 😉
+
+*If* you want to set it up using Docker, just use the provided [docker-compose.yml](docker-compose.yml). But before, you might want to change some stuff in there like the used Domains.
+
+To build the needed images, just clone the repository and execute the following on your environment.
+```
+$ docker-compose build
+```
+
+After that, just run the following command and everything should be up. 🤞
+```
+$ docker-compose up -d
+```
+
 ## Architecture
 
 #### Backend
