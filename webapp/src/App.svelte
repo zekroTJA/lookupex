@@ -1,5 +1,6 @@
 <script lang="ts">
   import User from "./components/User.svelte";
+  import Footer from "./components/Footer.svelte";
   import type { User as UserModel } from "./models";
 
   let id = "";
@@ -51,6 +52,7 @@
       {/await}
     {/if}
   </div>
+  <Footer />
 </main>
 
 <style lang="scss">
