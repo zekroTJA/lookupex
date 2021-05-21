@@ -5,9 +5,7 @@ on:
     branches:
       - master
     tags:
-      - '*'
-    tags-ignore:
-      - 'cli-*'
+      - 'be-*'
     paths-ignore:
       - '**.md'
 

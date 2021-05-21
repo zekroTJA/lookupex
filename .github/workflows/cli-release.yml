@@ -30,7 +30,6 @@ jobs:
           GOOS=linux   GOARCH=amd64 go build -v -o cli-linux-amd64       cmd/main.go
           GOOS=linux   GOARCH=arm64 go build -v -o cli-linux-arm64       cmd/main.go
           GOOS=windows GOARCH=amd64 go build -v -o cli-windows-amd64.exe cmd/main.go
-          GOOS=windows GOARCH=arm64 go build -v -o cli-windows-arm64.exe cmd/main.go
           GOOS=darwin  GOARCH=amd64 go build -v -o cli-darwin-amd64      cmd/main.go
           GOOS=darwin  GOARCH=arm64 go build -v -o cli-darwin-arm64      cmd/main.go
 
@@ -41,7 +40,6 @@ jobs:
             -a cli-linux-amd64  
             -a cli-linux-arm64  
             -a cli-windows-amd64.exe
-            -a cli-windows-arm64.exe
             -a cli-darwin-amd64 
             -a cli-darwin-arm64 
             -m "CLI Release"
