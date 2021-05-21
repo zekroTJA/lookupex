@@ -6,6 +6,8 @@ on:
       - master
     tags:
       - '*'
+    tags-ignore:
+      - 'cli-*'
     paths-ignore:
       - '**.md'
 
