@@ -38,3 +38,17 @@ jobs:
           context: ./
           push: true
           tags: ghcr.io/zekrotja/lookupex:${{ env.TAG }}
+      
+      - name: Docker Remote Deploy
+        if: startsWith(github.ref, 'refs/heads/master')
+        uses: appleboy/ssh-action@master
+        with:
+          host: zekro.de
+          port: 2201
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd /home/mgr/docker/core
+            docker-compose pull lookupex
+            docker-compose up -d lookupex
+
