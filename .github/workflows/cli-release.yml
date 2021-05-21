@@ -1,0 +1,48 @@
+name: CLI Releases CD
+
+on:
+  push:
+    tags:
+      - 'cli-*'
+
+jobs:
+
+  releases-deploy:
+
+    name: GitHub Releases Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.16
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.16
+
+      - name: Set up Hub
+        run: |
+          sudo snap install hub --classic
+
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Build releases
+        working-directory: './cli'
+        run: |
+          GOOS=linux   GOARCH=amd64 go build -v -o cli-linux-amd64       cmd/main.go
+          GOOS=linux   GOARCH=arm64 go build -v -o cli-linux-arm64       cmd/main.go
+          GOOS=windows GOARCH=amd64 go build -v -o cli-windows-amd64.exe cmd/main.go
+          GOOS=windows GOARCH=arm64 go build -v -o cli-windows-arm64.exe cmd/main.go
+          GOOS=darwin  GOARCH=amd64 go build -v -o cli-darwin-amd64      cmd/main.go
+          GOOS=darwin  GOARCH=arm64 go build -v -o cli-darwin-arm64      cmd/main.go
+
+      - name: Deploy to Releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: 'hub release create
+            -a cli-linux-amd64  
+            -a cli-linux-arm64  
+            -a cli-windows-amd64.exe
+            -a cli-windows-arm64.exe
+            -a cli-darwin-amd64 
+            -a cli-darwin-arm64 
+            -m "CLI Release"
+            $(git describe --tags --abbrev=0)'
