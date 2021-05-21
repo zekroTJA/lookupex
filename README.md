@@ -21,7 +21,7 @@ $ docker-compose up -d
 
 ## Architecture
 
-#### Backend
+### Backend
 
 The main backend serviceconsists of 3 Elixir GenServers:
 - The Plug/Cowboy WebServer which handles the web requests
@@ -34,8 +34,17 @@ This stuff is then wrapped into a Docker container to seamlessly deploy it to a 
 
 Of course, all of that sits comfortly behind a [Traefik](https://doc.traefik.io/traefik/) instance handling CORS and Rate Limiting.
 
-#### Frontend
+### Frontend
 
-If you are not that kind of *curl*y guy (haha), you can of course use a fancy web frontend which is written in [Svelte](https://svelte.dev). Actually, this was my first attempt to get a deeper look into Sevlte, so please excuse that messy code. :^)
+If you are not that kind of *curl*y guy *(haha)*, you can of course use a fancy web frontend which is written in [Svelte](https://svelte.dev). Actually, this was my first attempt to get a deeper look into Sevlte, so please excuse that messy code. :^)
 
 On every commit to the master branch, aa friendly GitHub Actions worker grabs the code, builds the static web app files, deploys them to a branch called `gh-pages` and from there, like the name says, it is served using the GitHub Pages service. I've just set up a CNAME to point [lookup.zekro.de](https://lookup.zekro.de) to the GitHub Pages server.
+
+### CLI
+
+And if you are one of these cool guys 😎 doing everything in terminal land, take a look into the [Releases](https://github.com/zekroTJA/lookupex/releases). There you can find a handy dandy CLI tool, which is [written in Go](cli/) by the way. And it supports colored output! 👀
+
+---
+
+© 2021 Ringo Hoffmann (zekro Development).  
+Covered by the MIT License.
