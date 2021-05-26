@@ -3,6 +3,7 @@ FROM elixir:alpine
 WORKDIR /app
 
 COPY lib lib
+COPY config config
 COPY mix.exs .
 COPY mix.lock .
 
