@@ -16,6 +16,8 @@
     id = match?.length > 0 ? match[0] : "";
     fetchPromise = undefined;
 
+    if (!id) return;
+
     setTimeout(
       (cv: string) => {
         if (id === cv) fetchPromise = fetchData();
