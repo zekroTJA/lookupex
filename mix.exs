@@ -26,7 +26,7 @@ defmodule Lookupex.MixProject do
       {:cors_plug, "~> 2.0"},
       {:jason, "~> 1.2"},
       {:tesla, "~> 1.4.0"},
-      {:envy, "~> 1.1.1"},
+      {:dotenvy, "~> 0.1.0"},
       {:redix, ">= 0.0.0"}
     ]
   end

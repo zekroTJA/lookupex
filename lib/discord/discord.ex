@@ -1,23 +1,23 @@
 defmodule Lookupex.Discord do
-  use GenServer
   require Logger
 
   import Lookupex.Discord.Util
 
-  @name __MODULE__
-
-  def start_link(_args) do
-    GenServer.start_link(__MODULE__, :ok, name: @name)
+  def lookup(id, timeout \\ 10_000) do
+    Task.Supervisor.async(
+      Lookupex.Discord.Supervisor,
+      fn -> lookup_blocking(id) end
+    )
+    |> Task.await(timeout)
   end
 
-  def init(_state) do
-    api_token = System.get_env("DISCORD_API_TOKEN")
-    if api_token == nil, do: raise("no API token provided")
+  defp client do
+    token = Application.get_env(:lookupex, Discord)[:token]
 
-    {:ok, %{client: client(api_token)}}
-  end
+    if token == nil do
+      raise ArgumentError, "DISCORD_API_TOKEN must be specified"
+    end
 
-  def client(token) do
     middleware = [
       {Tesla.Middleware.BaseUrl, "https://discord.com/api"},
       Tesla.Middleware.JSON,
@@ -27,25 +27,17 @@ defmodule Lookupex.Discord do
     Tesla.client(middleware)
   end
 
-  ### API ###
-
-  def lookup(id, pid \\ @name) do
-    GenServer.call(pid, {:lookup, id})
-  end
-
-  ### CALLBACKS ###
-
-  def handle_call({:lookup, id}, _from, state) do
+  defp lookup_blocking(id) do
     Logger.info("lookup", id: id)
 
     if not check_id(id) do
-      {:reply, {%{code: 400, message: "invalid snowflake id"}, 400}, state}
+      {%{code: 400, message: "invalid snowflake id"}, 400}
     else
-      {request_count, data, status} = Lookupex.Cache.request_user(id)
+      {request_count, data, status} = Lookupex.Cache.request_user!(id)
 
       {data, status} =
         if data == nil do
-          {:ok, response} = Tesla.get(state[:client], "/users/" <> id)
+          {:ok, response} = Tesla.get(client(), "/users/" <> id)
 
           ok = response.status < 400
 
@@ -59,7 +51,7 @@ defmodule Lookupex.Discord do
               response.body
             end
 
-          Lookupex.Cache.put_user(id, body, response.status)
+          Lookupex.Cache.put_user!(id, body, response.status)
 
           {body, response.status}
         else
@@ -69,7 +61,7 @@ defmodule Lookupex.Discord do
       data = if status < 400, do: data |> Map.put("request_count", request_count), else: data
       data = data |> Map.put("date", DateTime.utc_now())
 
-      {:reply, {data, status}, state}
+      {data, status}
     end
   end
 end

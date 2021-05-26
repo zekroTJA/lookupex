@@ -11,11 +11,7 @@ defmodule Lookupex.Webserver.Router do
     json_decoder: Jason
   )
 
-  # This is dirty, maybe find a better solution
-  # for that later :)
-  Envy.auto_load()
-
-  if System.get_env("DEBUG", "false") |> String.downcase() == "true" do
+  if Application.get_env(:lookupex, :debug) do
     Logger.warn("debug mode engaged")
     plug(CORSPlug)
   end
